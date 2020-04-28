@@ -1,2 +1,4 @@
-# delivery-app
-A Food/Grocery delivery back-end node.js application
+# delivery-app-backend
+Backend APIs for food delivery app
+
+rate-limiter-flexible, helmet, mongoSanitize, pm2, mongoose

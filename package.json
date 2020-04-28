@@ -1,5 +1,5 @@
 {
-  "name": "delivery-app-backend",
+  "name": "delivery-app",
   "version": "1.0.0",
   "description": "Backend APIs for food delivery app",
   "main": "app.js",
@@ -10,12 +10,12 @@
     "type": "git",
     "url": "git+https://github.com/rakeshvanam29/delivery-app-backend.git"
   },
-  "author": "Rakesh Vanam",
+  "author": "Koshthak",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/rakeshvanam29/delivery-app-backend/issues"
+    "url": "https://github.com/koshthak/delivery-app/issues"
   },
-  "homepage": "https://github.com/rakeshvanam29/delivery-app-backend#readme",
+  "homepage": "https://github.com/koshthak/delivery-app#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",

@@ -1,15 +1,10 @@
 # node-template
-Backend APIs for food delivery app
 
-rate-limiter-flexible, helmet, mongoSanitize, pm2 ==> Pending
+A template for nodejs server using express and mongodb
 
+3 trypes of env:- dev, production, staging
 
-Sample API Req to test:-
-
-POST Request:- http://localhost:3001/api/auth/signin
-
-Request Object:-
-{
-	"username":"rakesh.vanam001@gmail.com",
-	"password":"Rakesh@123"
-}
+## to run the project in local machine (dev envirnment)
+- add `.env.dev` in the root folder
+- an example of the env everyables can be fined in `.env.example`
+- `npm start` or `npm run dev` 

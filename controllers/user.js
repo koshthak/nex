@@ -1,4 +1,4 @@
-const User = require("../models/user");
+// const User = require('../models/user');
 
 // View logged in user profile
 const me = (req, res) => {

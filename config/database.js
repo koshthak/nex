@@ -1,42 +1,14 @@
 let config = {
-  local: {
-    url: "mongodb://localhost",
-    port: "27017",
-    db_name: "food_delivery",
-    username: "admin",
-    password: "admin",
-    options: {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useCreateIndex: true,
-    },
-  },
-  staging: {
-    url: "mongodb://localhost",
-    port: "27017",
-    db_name: "food_delivery",
-    username: "admin",
-    password: "admin",
-    options: {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useCreateIndex: true,
-    },
-  },
-  production: {
-    url: "mongodb://localhost",
-    port: "27017",
-    db_name: "food_delivery",
-    username: "admin",
-    password: "admin",
-    options: {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useCreateIndex: true,
-    },
+  url: process.env.DB_URL,
+  port: process.env.DB_PORT,
+  db_name: process.env.DB_NAME,
+  username: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  options: {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
   },
 };
 
-module.exports = {
-  config,
-};
+module.exports = config;

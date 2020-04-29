@@ -1,64 +1,55 @@
 const express = require("express");
-const routes = require("./app/routes");
 const bodyParser = require("body-parser");
-const mongoose = require("mongoose");
-const dbConfig = require("./config/database");
-const serverConfig = require("./config/server");
-const apiResponse = require("./app/utils/responder");
-const buildInfo = require("./app/utils/buildInfo").getBuildInfo();
+const compress = require("compression");
+const cors = require("cors");
+const helmet = require("helmet");
+const Ddos = require("ddos");
+const ExpressLogs = require("express-server-logs");
+const path = require("path");
 
-// App Mode === local/staging/production
-let appMode = buildInfo.appMode;
+// loading env variables
+const envTYpe =
+  process.env.NODE_ENV === "prod" ? "" : "." + process.env.NODE_ENV;
+require("dotenv").config({
+  path: path.join(__dirname, "./.env" + envTYpe),
+});
 
-// create express app
+// IMP: local file imaport after loading env varible
+const routes = require("./routes");
+const winston = require("./services/winston.service");
+const corsConfig = require("./config/cors");
+
 const app = express();
 
-// parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: true }));
+// npm module for preventing ddos attack. See more https://www.npmjs.com/package/ddos
+const ddosInstance = new Ddos(ddosConfig);
+app.use(ddosInstance.express);
 
-// parse application/json
-app.use(bodyParser.json());
+// parse body params and attache them to req.body
+app.use(bodyParser.json()); /* application/json */
+app.use(bodyParser.urlencoded({ extended: true })); /* application/x-www-form-urlencoded */
 
-// DB connection
-mongoose.Promise = global.Promise;
+// gzip compression
+app.use(compress());
 
-// Connecting to the database
-dbConfigObj = dbConfig["config"][appMode];
+// secure servers by setting various HTTP headers
+app.use(helmet());
 
-// For Staging/Production with Database Password
-// const dbURL = `${dbConfigObj.username}:${dbConfigObj.password}@${dbConfigObj.url}:${dbConfigObj.port}/${dbConfigObj.db_name}`;
+// enable CORS - Cross Origin Resource Sharing
+app.use(cors(corsConfig));
 
-// For Local Development without Database Password
-const dbURL = `${dbConfigObj.url}:${dbConfigObj.port}/${dbConfigObj.db_name}`;
-
-mongoose
-  .connect(dbURL, dbConfigObj.options)
-  .then(() => {
-    console.log("Successfully connected to the database");
-  })
-  .catch((err) => {
-    console.log("Could not connect to the database. Exiting now...", err);
-    process.exit();
-  });
-
+// morgan, winston logger
+app.use(morgan("combined", { stream: winston.stream }));
 
 //Route Prefixes
-app.use("/api/", routes);
+app.use("/api", routes);
 
 // throw 404 if URL not found
 app.all("*", function (req, res) {
-  return apiResponse.notFoundResponse(res, "Page not found/ Wrong URL");
+  res.status(404).json({ message: 'Page not found/ Wrong URL' });
 });
-
-app.use((err, req, res) => {
-  if (err.name == "UnauthorizedError") {
-    return apiResponse.unauthorizedResponse(res, err.message);
-  }
-});
-
-serverConfigObj = serverConfig["config"][appMode];
 
 // listen for requests
-app.listen(serverConfigObj.port, () => {
-  console.log(`Server is listening on port ${serverConfigObj.port}`);
+app.listen(process.env.PORT, () => {
+  console.log(`Server is listening on port ${process.env.PORT}`);
 });

@@ -1,27 +1,38 @@
 {
-  "name": "delivery-app",
+  "name": "rn-template",
   "version": "1.0.0",
-  "description": "Backend APIs for food delivery app",
+  "description": "Node app template",
   "main": "app.js",
   "scripts": {
-   "start": "nodemon app.js"
+    "start": "npm run dev",
+    "dev": "NODE_ENV=dev nodemon app.js",
+    "staging": "NODE_ENV=staging node app.js",
+    "prod": "NODE_ENV=prod node app.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rakeshvanam29/delivery-app-backend.git"
+    "url": "git+https://github.com/rakeshvanam29/rn-template-backend.git"
   },
   "author": "Koshthak",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/koshthak/delivery-app/issues"
+    "url": "https://github.com/koshthak/rn-template/issues"
   },
-  "homepage": "https://github.com/koshthak/delivery-app#readme",
+  "homepage": "https://github.com/koshthak/rn-template#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "ddos": "^0.2.1",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "express-server-logs": "^1.0.4",
+    "helmet": "^3.22.0",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.9.10"
+    "mongoose": "^5.9.10",
+    "morgan": "^1.10.0",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.3"

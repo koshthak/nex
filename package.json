@@ -7,7 +7,7 @@
     "start": "npm run dev",
     "dev": "NODE_ENV=dev nodemon app.js",
     "staging": "NODE_ENV=staging node app.js",
-    "prod": "NODE_ENV=prod node app.js"
+    "prod": "NODE_ENV=production node app.js"
   },
   "repository": {
     "type": "git",

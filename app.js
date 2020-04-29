@@ -4,15 +4,11 @@ const compress = require("compression");
 const cors = require("cors");
 const helmet = require("helmet");
 const Ddos = require("ddos");
-const ExpressLogs = require("express-server-logs");
 const path = require("path");
 
 // loading env variables
-const envTYpe =
-  process.env.NODE_ENV === "prod" ? "" : "." + process.env.NODE_ENV;
-require("dotenv").config({
-  path: path.join(__dirname, "./.env" + envTYpe),
-});
+const envTYpe = process.env.NODE_ENV === "prod" ? "" : "." + process.env.NODE_ENV;
+require("dotenv").config({path: path.join(__dirname, "./.env" + envTYpe)});
 
 // IMP: local file imaport after loading env varible
 const routes = require("./routes");

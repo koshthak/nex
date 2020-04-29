@@ -1,12 +1,12 @@
 var express = require("express");
-const { me, logout, logoutAll } = require("../controllers/auth");
+const { me, logout, logoutAll } = require("../controllers/user");
 
-var router = express.Router();
+var userRouter = express.Router();
 
-router.get("/me", me);
+userRouter.get("/me", me);
 
-router.post("/logout", logout);
+userRouter.post("/logout", logout);
 
-router.post("/logoutall", logoutAll);
+userRouter.post("/logoutall", logoutAll);
 
-module.exports = router;
+module.exports = userRouter;

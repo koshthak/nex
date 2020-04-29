@@ -6,7 +6,7 @@ const me = (req, res) => {
 };
 
 // Log user out of the application
-const logout = (req, res) => {
+const logout = async (req, res) => {
   try {
     req.user.tokens = req.user.tokens.filter((token) => {
       return token.token !== req.token;
@@ -19,7 +19,7 @@ const logout = (req, res) => {
 };
 
 // Log user out of all devices
-const logoutAll = (req, res) => {
+const logoutAll = async (req, res) => {
   try {
     req.user.tokens.splice(0, req.user.tokens.length);
     await req.user.save();

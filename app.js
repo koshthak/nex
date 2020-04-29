@@ -4,6 +4,7 @@ const compress = require("compression");
 const cors = require("cors");
 const helmet = require("helmet");
 const Ddos = require("ddos");
+const morgan = require('morgan');
 const path = require("path");
 
 // loading env variables
@@ -12,8 +13,9 @@ require("dotenv").config({path: path.join(__dirname, "./.env" + envTYpe)});
 
 // IMP: local file imaport after loading env varible
 const routes = require("./routes");
-const winston = require("./services/winston.service");
+const winston = require("./services/winston");
 const corsConfig = require("./config/cors");
+const ddosConfig = require("./config/ddos");
 
 const app = express();
 

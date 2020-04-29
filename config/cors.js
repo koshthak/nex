@@ -1,3 +1,5 @@
+const whitelist = null;
+
 const config = {
   exposedHeaders: "authorization, x-refresh-token, x-token-expiry-time",
   origin: (origin, callback) => {

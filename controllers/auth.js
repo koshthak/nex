@@ -1,6 +1,6 @@
 const User = require("../models/user");
 
-const signIn = (req, res) => {
+const signIn = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findByCredentials(email, password);
@@ -17,7 +17,7 @@ const signIn = (req, res) => {
   }
 };
 
-const signUp = (req, res) => {
+const signUp = async (req, res) => {
   try {
     const user = new User(req.body);
     await user.save();

@@ -20,6 +20,9 @@ const options = {
     maxsize: 5242880, // 5MB
     maxFiles: 100,
   },
+  console: {
+    format: winston.format.combine(winston.format.colorize(), winston.format.simple()),
+  },
 };
 
 // instantiate a new Winston Logger with the settings defined above
@@ -31,11 +34,7 @@ const logger = winston.createLogger({
 // If we're not in production then log to the `console` with the format:
 // `${info.level}: ${info.message} JSON.stringify({ ...rest }) `
 if (process.env.NODE_ENV !== 'production') {
-  logger.add(
-    new winston.transports.Console({
-      format: winston.format.combine(winston.format.colorize(), winston.format.simple()),
-    })
-  );
+  logger.add(new winston.transports.Console(options.console));
 }
 
 // create a stream object with a 'write' function that will be used by `morgan`

@@ -2,17 +2,17 @@
 
 // View logged in user profile
 const me = (req, res) => {
-  res.send(req.user);
+  req.user.password = undefined;
+  req.user.tokens = undefined;
+  res.status(200).send(req.user);
 };
 
 // Log user out of the application
 const logout = async (req, res) => {
   try {
-    req.user.tokens = req.user.tokens.filter((token) => {
-      return token.token !== req.token;
-    });
+    req.user.tokens.pop(req.token);
     await req.user.save();
-    res.send();
+    res.status(200).send({ message: 'success' });
   } catch (error) {
     res.status(500).send(error);
   }
@@ -23,7 +23,7 @@ const logoutAll = async (req, res) => {
   try {
     req.user.tokens.splice(0, req.user.tokens.length);
     await req.user.save();
-    res.send();
+    res.status(200).send({ message: 'success' });
   } catch (error) {
     res.status(500).send(error);
   }

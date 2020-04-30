@@ -28,14 +28,21 @@ const userSchema = mongoose.Schema({
     required: true,
     minLength: 7,
   },
-  tokens: [
-    {
-      token: {
-        type: String,
-        required: true,
+  tokens: {
+    type: [
+      {
+        token: {
+          type: String,
+          required: true,
+        },
       },
+    ],
+    validate: (value) => {
+      if (value.length >= 4) {
+        throw new Error('session active for 4 devices, logout first');
+      }
     },
-  ],
+  },
 });
 
 // Hash the password before saving the user model

@@ -46,7 +46,7 @@ const userSchema = mongoose.Schema({
 });
 
 // Hash the password before saving the user model
-userSchema.pre('save', async function (next) {
+userSchema.pre('save', async (next) => {
   const user = this;
   if (user.isModified('password')) {
     user.password = await bcrypt.hash(user.password, 8);
@@ -55,7 +55,7 @@ userSchema.pre('save', async function (next) {
 });
 
 // Generate an auth token for the user
-userSchema.methods.generateAuthToken = async function () {
+userSchema.methods.generateAuthToken = async () => {
   const user = this;
   const token = jwt.sign({ _id: user._id }, process.env.JWT_KEY);
   user.tokens = user.tokens.concat({ token });

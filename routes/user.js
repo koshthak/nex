@@ -1,7 +1,7 @@
-var express = require('express');
+const express = require('express');
 const { me, logout, logoutAll } = require('../controllers/user');
 
-var userRouter = express.Router();
+const userRouter = express.Router();
 
 userRouter.get('/me', me);
 

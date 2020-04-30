@@ -49,7 +49,7 @@ mongoose
 // morgan, winston logger
 app.use(morgan('combined', { stream: winston.stream }));
 
-//Route Prefixes
+// Route Prefixes
 app.use('/api', routes);
 
 // throw 404 if URL not found

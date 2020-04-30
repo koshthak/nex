@@ -1,4 +1,4 @@
-var express = require('express');
+const express = require('express');
 const authMiddleware = require('../middlewares/auth');
 
 const authRouter = require('./auth');

@@ -1,20 +1,15 @@
 // To Validate req.body params
-validateParams = (reqParams, requiredParams) => {
-  let missingParams = [];
-  let emptyParams = [];
-  let isValid = true;
+const validateParams = (reqParams, requiredParams) => {
+  console.log('reqParams :>> ', reqParams);
+  const missingParams = []; /* store  invalid params  */
   requiredParams.forEach((param) => {
-    if (!reqParams.hasOwnProperty(param)) {
+    if (!reqParams[param]) {
+      // check for missing or empty string, null or undefined
       missingParams.push(param);
-      isValid = false;
-    } else if (reqParams[param] === '') {
-      emptyParams.push(param);
-      isValid = false;
     }
   });
-  return { isValid, error: { missingParams, emptyParams } };
+  const isValid = !missingParams.length > 0;
+  return { isValid, error: { missingParams } };
 };
 
-module.exports = {
-  validateParams,
-};
+module.exports = { validateParams };

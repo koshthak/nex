@@ -38,7 +38,7 @@ const userSchema = mongoose.Schema({
       },
     ],
     validate: (value) => {
-      if (value.length >= 4) {
+      if (value.length > 4) {
         throw new Error('session active for 4 devices, logout first from any one device');
       }
     },
@@ -68,7 +68,7 @@ userSchema.methods.generateAuthToken = async function (key) {
     return token;
   } catch (error) {
     console.log('error :>> ', error);
-    return key === "signUp" ? null : {token:null, error: error.errors.tokens.message} 
+    return key === 'signUp' ? null : { token: null, error: error.errors.tokens.message };
   }
 };
 
@@ -86,7 +86,6 @@ userSchema.statics.findByCredentials = async (email, password) => {
     return user;
   } catch (error) {
     console.log('error :>> ', error);
-    return
   }
 };
 

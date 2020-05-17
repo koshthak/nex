@@ -14,7 +14,7 @@ require('dotenv').config({ path: path.join(__dirname, './.env' + envTYpe) });
 
 // IMP: local file imaport after loading env varible
 const routes = require('./routes');
-const winston = require('./utils/winston');
+const { winston } = require('./utils');
 const { corsConfig, ddosConfig, dbConfig } = require('./config');
 
 const app = express();

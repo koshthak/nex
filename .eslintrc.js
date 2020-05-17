@@ -23,5 +23,6 @@ module.exports = {
     'no-var': 'error',
     'comma-dangle': 0,
     semi: ['error', 'always'],
+    'no-throw-literal': 'off',
   },
 };

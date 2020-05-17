@@ -1,3 +1,7 @@
-const utils = require('./validators');
+const validators = require('./validators');
+const winston = require('./winston');
 
-module.exports = utils ;
+module.exports = {
+  validators,
+  winston,
+};

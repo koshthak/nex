@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const { errorObj } = require('../utils');
 
 const auth = async (req, res, next) => {
   try {
@@ -13,7 +14,7 @@ const auth = async (req, res, next) => {
     req.token = token;
     next();
   } catch (error) {
-    res.status(401).send({ error: 'Not authorized to access this resource' });
+    res.status(401).send(errorObj('Not authorized to access this resource', 'Unauthorized', 'Invalid token'));
   }
 };
 

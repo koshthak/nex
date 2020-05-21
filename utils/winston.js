@@ -1,24 +1,30 @@
 const path = require('path');
 const winston = require('winston');
 
+const print = winston.format.printf((info) => {
+  const log = `${info.level}: ${info.message}`;
+
+  return info.stack ? `${log}\n${info.stack}` : log;
+});
+
 // define the custom settings for each transport (file, console, error)
 const options = {
   file: {
     level: 'info',
     filename: path.join(__dirname, './../logs/app.log'),
     handleExceptions: true,
-    json: true,
     maxsize: 5242880, // 5MB
     maxFiles: 5,
+    format: winston.format.combine(winston.format.json(), print),
   },
   error: {
     level: 'error',
     name: 'file.error',
     filename: path.join(__dirname, './../logs/error.log'),
     handleExceptions: true,
-    json: true,
     maxsize: 5242880, // 5MB
     maxFiles: 100,
+    format: winston.format.combine(winston.format.json(), print),
   },
   console: {
     format: winston.format.combine(winston.format.colorize(), winston.format.simple()),

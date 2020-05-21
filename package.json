@@ -1,11 +1,11 @@
 {
-  "name": "rn-template",
-  "version": "1.0.0",
+  "name": "node-template",
+  "version": "0.0.1",
   "description": "Node app template",
   "main": "app.js",
   "type": "commonjs",
   "engines": {
-    "node": ">=8.10.0"
+    "node": ">=10.10.0"
   },
   "scripts": {
     "start": "npm run dev",
@@ -15,14 +15,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rakeshvanam29/rn-template-backend.git"
+    "url": "git+https://github.com/koshthak/node-template.git"
   },
   "author": "Koshthak",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/koshthak/rn-template/issues"
+    "url": "https://github.com/koshthak/node-template/issues"
   },
-  "homepage": "https://github.com/koshthak/rn-template#readme",
+  "homepage": "https://github.com/koshthak/node-template#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",

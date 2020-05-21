@@ -3,6 +3,8 @@ const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+const { winston, errorObj } = require('./../utils');
+
 const userSchema = mongoose.Schema({
   name: {
     type: String,
@@ -50,16 +52,30 @@ userSchema.pre('save', async function (next) {
   try {
     const user = this;
     if (user.isModified('password')) {
-      user.password = await bcrypt.hash(user.password, 8);
+      user.password = await bcrypt.hash();
     }
     next();
   } catch (error) {
-    console.log('error :>> ', error);
+    winston.error('error in Password hasing: ', error);
+    throw errorObj('Error in Password hasing', 'Error in Password hasing', error.message);
+  }
+});
+
+// post save error validation
+userSchema.post('save', function (error, doc, next) {
+  if (error.name === 'MongoError') {
+    winston.error('error in saving data: ', error);
+    if (error.code === 11000) {
+      throw errorObj('Email already registered', 'Error in saving data', error.errmsg);
+    }
+    throw errorObj('Error in saving data', 'Error in saving data', error.errmsg);
+  } else {
+    next();
   }
 });
 
 // Generate an auth token for the user
-userSchema.methods.generateAuthToken = async function (key) {
+userSchema.methods.generateAuthToken = async function () {
   try {
     const user = this;
     const token = jwt.sign({ _id: user._id }, process.env.JWT_KEY);
@@ -67,8 +83,8 @@ userSchema.methods.generateAuthToken = async function (key) {
     await user.save();
     return token;
   } catch (error) {
-    console.log('error :>> ', error);
-    return key === 'signUp' ? null : { token: null, error: error.errors.tokens.message };
+    winston.error('error in genrating token: ', error);
+    throw errorObj('Failed to genrate Auth Token', error.type, error.message);
   }
 };
 
@@ -85,7 +101,8 @@ userSchema.statics.findByCredentials = async (email, password) => {
     }
     return user;
   } catch (error) {
-    console.log('error :>> ', error);
+    winston.error('error in validating user: ', error);
+    throw errorObj('Failed to validating user', error.type, error.message);
   }
 };
 

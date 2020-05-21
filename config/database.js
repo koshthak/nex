@@ -1,4 +1,4 @@
-let config = {
+const config = {
   url: process.env.DB_URL,
   port: process.env.DB_PORT,
   db_name: process.env.DB_NAME,

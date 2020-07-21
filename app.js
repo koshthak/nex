@@ -52,12 +52,19 @@ app.use(morgan('combined', { stream: winston.stream }));
 // Route Prefixes
 app.use('/api', routes);
 
+// server ping
+app.get('/', (req, res) => res.status(200).json({ message: 'server is running' }));
+
 // throw 404 if URL not found
 app.all('*', function (req, res) {
   res.status(404).json({ message: 'API not found' });
 });
 
 // listen for requests
-app.listen(process.env.PORT || 3000, () => {
-  winston.info(`Server is listening on port ${process.env.PORT || 3000}`);
-});
+app
+  .listen(process.env.PORT || 3000, (port) => {
+    winston.info(`Server is listening on port ${port}`);
+  })
+  .on('error', (err) => {
+    winston.error('error in starting the server ', err);
+  });

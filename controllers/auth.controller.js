@@ -1,9 +1,9 @@
 const User = require('../models/users.model');
-const { validatorParams, errorObj } = require('../utils');
+const { validateParams, errorObj } = require('../utils');
 
 const signIn = async (req, res) => {
   try {
-    validatorParams(req.body, ['email', 'password'], 'Username or Password cannot be empty');
+    validateParams(req.body, ['email', 'password'], 'Username or Password cannot be empty');
     const { email, password } = req.body;
     const user = await User.findByCredentials(email, password);
     if (!user) {
@@ -21,7 +21,7 @@ const signIn = async (req, res) => {
 
 const signUp = async (req, res) => {
   try {
-    validatorParams(req.body, ['name', 'email', 'password'], 'Failed to register user');
+    validateParams(req.body, ['name', 'email', 'password'], 'Failed to register user');
     const user = await new User(req.body);
     const token = await user.generateAuthToken();
     res.status(201).send({ token });

@@ -7,8 +7,8 @@
  * @returns {Object} - error object to send in response to user
  */
 
-const errObh = (errorHeading, errorType, errorMessage, other) => {
+const errObj = (errorHeading, errorType, errorMessage, other) => {
   return { errorHeading, error: { type: errorType, message: errorMessage, ...other } };
 };
 
-module.exports = errObh;
+module.exports = errObj;

@@ -54,10 +54,10 @@ app.use('/api', routes);
 
 // throw 404 if URL not found
 app.all('*', function (req, res) {
-  res.status(404).json({ message: 'Page not found/ Wrong URL' });
+  res.status(404).json({ message: 'API not found' });
 });
 
 // listen for requests
-app.listen(process.env.PORT, () => {
-  winston.info(`Server is listening on port ${process.env.PORT}`);
+app.listen(process.env.PORT || 3000, () => {
+  winston.info(`Server is listening on port ${process.env.PORT || 3000}`);
 });

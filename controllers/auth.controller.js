@@ -1,13 +1,9 @@
-const User = require('../models/user');
-const { validators, errorObj } = require('../utils');
+const User = require('../models/users.model');
+const { validatorParams, errorObj } = require('../utils');
 
 const signIn = async (req, res) => {
   try {
-    const { isValid, error } = await validators.validateParams(req.body, ['email', 'password']);
-    if (!isValid) {
-      throw errorObj('Username or Password cannot be empty', 'invalid params', '', error);
-    }
-
+    validatorParams(req.body, ['email', 'password'], 'Username or Password cannot be empty');
     const { email, password } = req.body;
     const user = await User.findByCredentials(email, password);
     if (!user) {
@@ -25,11 +21,7 @@ const signIn = async (req, res) => {
 
 const signUp = async (req, res) => {
   try {
-    const { isValid, error } = await validators.validateParams(req.body, ['name', 'email', 'password']);
-    if (!isValid) {
-      throw errorObj('Failed to register user', 'invalid params', '', error);
-    }
-
+    validatorParams(req.body, ['name', 'email', 'password'], 'Failed to register user');
     const user = await new User(req.body);
     const token = await user.generateAuthToken();
     res.status(201).send({ token });

@@ -1,5 +1,5 @@
-const corsConfig = require('./cors');
-const ddosConfig = require('./ddos');
-const dbConfig = require('./database');
+const corsConfig = require('./cors.config');
+const ddosConfig = require('./ddos.config');
+const dbConfig = require('./database.config');
 
 module.exports = { corsConfig, ddosConfig, dbConfig };

@@ -1,0 +1,13 @@
+version: '3.7'
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: nex_mongodb_database
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: nex
+      MONGO_INITDB_ROOT_PASSWORD: nex1234
+    ports:
+      - '27017:27017'
+    volumes:
+      - ./data:/var/lib/mongodb

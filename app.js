@@ -62,8 +62,8 @@ app.all('*', function (req, res) {
 
 // listen for requests
 app
-  .listen(process.env.PORT || 3000, (port) => {
-    winston.info(`Server is listening on port ${port}`);
+  .listen(process.env.PORT || 3000, () => {
+    winston.info(`Server is listening on port ${process.env.PORT || 3000}`);
   })
   .on('error', (err) => {
     winston.error('error in starting the server ', err);

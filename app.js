@@ -7,6 +7,8 @@ const mongoose = require('mongoose');
 const Ddos = require('ddos');
 const morgan = require('morgan');
 const path = require('path');
+const swaggerJSDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
 
 // loading env variables
 const envTYpe = process.env.NODE_ENV === 'production' ? '' : '.' + process.env.NODE_ENV;
@@ -15,7 +17,7 @@ require('dotenv').config({ path: path.join(__dirname, './.env' + envTYpe) });
 // IMP: local file imaport after loading env varible
 const routes = require('./routes');
 const { winston } = require('./utils');
-const { corsConfig, ddosConfig, dbConfig } = require('./config');
+const { corsConfig, ddosConfig, dbConfig, swaggerConfig } = require('./config');
 
 const app = express();
 
@@ -54,6 +56,9 @@ app.use('/api', routes);
 
 // server ping
 app.get('/', (req, res) => res.status(200).json({ message: 'server is running' }));
+
+// swagger docs
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(swaggerConfig)));
 
 // throw 404 if URL not found
 app.all('*', function (req, res) {

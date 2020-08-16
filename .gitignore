@@ -117,5 +117,7 @@ dist
 .yarn/build-state.yml
 .pnp.*
 
-tmp
+docker-compose.yml
+
 data
+tmp

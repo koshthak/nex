@@ -1,3 +1,4 @@
+const STATUS = require('../constants/statusCodes.constant');
 const User = require('../models/users.model');
 const { validateParams, errorObj } = require('../utils');
 
@@ -7,27 +8,31 @@ const signIn = async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findByCredentials(email, password);
     if (!user) {
-      return res.status(401).send(errorObj('Login Failed', 'Unauthorized', 'Invalid authentication credentials'));
+      throw errorObj(
+        STATUS.UNAUTHORIZED,
+        'Email or Password is invalid',
+        'Unauthorized',
+        'Invalid authentication credentials'
+      );
     }
 
     const token = await user.generateAuthToken();
     user.tokens = undefined;
     user.password = undefined;
-    res.status(200).send({ user, token });
+    res.status(STATUS.OK).send({ data: { user, token }, message: 'success' });
   } catch (error) {
-    res.status(400).send(error);
+    res.status(error.status || STATUS.INTERNAL_SERVER_ERROR).send(error);
   }
 };
 
 const signUp = async (req, res) => {
   try {
     validateParams(req.body, ['name', 'email', 'password'], 'Failed to register user');
-    const user = await new User(req.body);
+    const user = await new User(req.body).save();
     const token = await user.generateAuthToken();
-    res.status(201).send({ token });
+    res.status(STATUS.CREATED).send({ message: 'sucessfully created', data: { token, id: user._id } });
   } catch (error) {
-    console.log(error);
-    res.status(400).send(error);
+    res.status(error.status || STATUS.INTERNAL_SERVER_ERROR).send(error);
   }
 };
 

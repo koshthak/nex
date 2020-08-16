@@ -1,4 +1,5 @@
 const errorObj = require('./errorObj.utils');
+const STATUS = require('../constants/statusCodes.constant');
 
 const validateParams = (reqParam, requiredParams, message = '') => {
   const invalidParams = []; /* store  invalid params  */
@@ -9,7 +10,9 @@ const validateParams = (reqParam, requiredParams, message = '') => {
     }
   });
   if (invalidParams.length > 0) {
-    throw errorObj(message || 'required or empty params', 'invalid params', '', { params: invalidParams });
+    throw errorObj(STATUS.UNPROCESSABLE_ENTITY, message || 'required or empty params', 'invalid params', '', {
+      params: invalidParams,
+    });
   }
 };
 

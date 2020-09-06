@@ -1,9 +1,7 @@
-const validateParams = require('./validateParams.utils');
-const errorObj = require('./errorObj.utils');
 const winston = require('./winston.utils');
+const resObj = require('./resObj.utils');
 
 module.exports = {
-  errorObj,
-  validateParams,
+  resObj,
   winston,
 };

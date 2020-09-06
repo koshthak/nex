@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
-const validator = require('validator');
+const Joi = require('joi');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const { winston, errorObj } = require('../utils');
+const { winston, resObj } = require('../utils');
 const STATUS = require('../constants/statusCodes.constant');
 
 const userSchema = mongoose.Schema({
@@ -18,7 +18,7 @@ const userSchema = mongoose.Schema({
     unique: true,
     lowercase: true,
     validate: (value) => {
-      if (!validator.isEmail(value)) {
+      if (!Joi.string().email().validate(value)) {
         throw 'Invalid Email address';
       }
     },
@@ -53,14 +53,13 @@ userSchema.pre('save', function (next) {
   try {
     const user = this;
     if (user.isModified('password')) {
-      console.log(user);
       const salt = bcrypt.genSaltSync(process.env.token);
       user.password = bcrypt.hashSync(user.password, salt);
     }
     next();
   } catch (error) {
     winston.error('error in Password hasing: ', error);
-    throw errorObj(STATUS.INTERNAL_SERVER_ERROR, 'Error in Password hasing', 'Error in Password hasing', error.message);
+    throw resObj.error('Error in Password hasing', error.message);
   }
 });
 
@@ -71,13 +70,14 @@ userSchema.post('save', function (error, doc, next) {
     switch (error.name) {
       case 'MongoError':
         if (error.code === 11000) {
-          throw errorObj(STATUS.BAD_REQUEST, 'Already registered', error.type || error.name, error.message);
+          throw resObj.error('duplicate entry', error.message, { status: STATUS.BAD_REQUEST });
         }
-        throw errorObj(STATUS.BAD_REQUEST, 'MongoError', error.type || error.name, error.message);
+        throw resObj.error(error.type || error.name, error.message, { status: STATUS.BAD_REQUEST });
       case 'ValidationError': {
         const errorsKeys = Object.keys(error.errors) || [];
         const errorReasons = errorsKeys.map((key) => error.errors[key].reason);
-        throw errorObj(STATUS.BAD_REQUEST, 'invalid params', error.message, error.type || error.name, {
+        throw resObj.error(error.type || error.name, error.message, {
+          status: STATUS.BAD_REQUEST,
           reasons: errorReasons,
         });
       }
@@ -97,12 +97,7 @@ userSchema.methods.generateAuthToken = async function () {
     return token;
   } catch (error) {
     winston.error('error in genrating token: ', error);
-    throw errorObj(
-      STATUS.INTERNAL_SERVER_ERROR,
-      'Failed to genrate Auth Token',
-      error.type || error.name,
-      error.message
-    );
+    throw resObj.error(error.type || error.name, error.message);
   }
 };
 
@@ -115,12 +110,12 @@ userSchema.statics.findByCredentials = async (email, password) => {
     }
     const isPasswordMatch = await bcrypt.compare(password, user.password);
     if (!isPasswordMatch) {
-      return;
+      throw resObj.error('Unauthorized', 'Email or Password is invalid', { status: STATUS.UNAUTHORIZED });
     }
     return user;
   } catch (error) {
     winston.error('error in validating user: ', error);
-    throw errorObj(STATUS.BAD_REQUEST, 'Failed to validating user', error.type, error.message);
+    throw resObj.error(error.type, error.message);
   }
 };
 

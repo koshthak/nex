@@ -1,4 +1,7 @@
 const express = require('express');
+
+const joiMiddleware = require('../middlewares/joi.middleware');
+const { authSchema } = require('../joiSchema');
 const { signIn, signUp } = require('../controllers/auth.controller');
 
 const authRouter = express.Router();
@@ -14,7 +17,7 @@ const authRouter = express.Router();
  *    tags:
  *      - auth
  */
-authRouter.post('/login', signIn);
+authRouter.post('/login', joiMiddleware, signIn);
 
 /**
  * @swagger
@@ -27,6 +30,6 @@ authRouter.post('/login', signIn);
  *    tags:
  *      - auth
  */
-authRouter.post('/register', signUp);
+authRouter.post('/register', joiMiddleware(authSchema.signUp), signUp);
 
 module.exports = authRouter;

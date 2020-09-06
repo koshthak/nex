@@ -1,10 +1,10 @@
 const jwt = require('jsonwebtoken');
 
 const User = require('../models/users.model');
-const { errorObj } = require('../utils');
+const { resObj } = require('../utils');
 const STATUS = require('../constants/statusCodes.constant');
 
-const auth = async (req, res, next) => {
+const authMiddleware = async (req, res, next) => {
   try {
     const token = req.header('Authorization').replace('Bearer ', '');
     const data = jwt.verify(token, process.env.JWT_KEY_SECRET);
@@ -16,10 +16,8 @@ const auth = async (req, res, next) => {
     req.token = token;
     next();
   } catch (error) {
-    res
-      .status(STATUS.UNAUTHORIZED)
-      .send(errorObj(STATUS.UNAUTHORIZED, 'Not authorized to access this resource', 'Unauthorized', 'Invalid token'));
+    res.status(STATUS.UNAUTHORIZED).send(resObj.error('Unauthorized', 'Invalid token', { status: res.statusCode }));
   }
 };
 
-module.exports = auth;
+module.exports = authMiddleware;

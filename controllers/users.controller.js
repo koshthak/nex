@@ -15,7 +15,7 @@ const logout = async (req, res) => {
     await req.user.save();
     res.status(STATUS.OK).send(resObj.success());
   } catch (error) {
-    res.status(error.status).send(error);
+    res.status(error.status || STATUS.INTERNAL_SERVER_ERROR).send(error);
   }
 };
 
@@ -26,7 +26,7 @@ const logoutAll = async (req, res) => {
     await req.user.save();
     res.status(STATUS.OK).send(resObj.success());
   } catch (error) {
-    res.status(error.status).send(error);
+    res.status(error.status || STATUS.INTERNAL_SERVER_ERROR).send(error);
   }
 };
 

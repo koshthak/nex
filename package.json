@@ -9,9 +9,9 @@
   },
   "scripts": {
     "start": "npm run dev",
-    "dev": "NODE_ENV=dev nodemon app.js",
-    "staging": "NODE_ENV=staging node app.js",
-    "prod": "NODE_ENV=production node app.js"
+    "dev": "NODE_ENV=dev nodemon index.js",
+    "staging": "NODE_ENV=staging node index.js",
+    "production": "NODE_ENV=production node index.js"
   },
   "repository": {
     "type": "git",
@@ -30,6 +30,7 @@
     "cors": "^2.8.5",
     "ddos": "^0.2.1",
     "dotenv": "^8.2.0",
+    "errorhandler": "^1.5.1",
     "express": "^4.17.1",
     "helmet": "^3.22.0",
     "joi": "^17.2.1",

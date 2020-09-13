@@ -12,7 +12,7 @@ const signIn = async (req, res) => {
     user.password = undefined;
     res.status(STATUS.OK).send(resObj.success({ user, token }));
   } catch (error) {
-    res.status(error.status).send(error);
+    res.status(error.status || STATUS.INTERNAL_SERVER_ERROR).send(error);
   }
 };
 
@@ -22,9 +22,7 @@ const signUp = async (req, res) => {
     const token = await user.generateAuthToken();
     res.status(STATUS.CREATED).send(resObj.success({ token, id: user._id }));
   } catch (error) {
-    console.log(error);
-    console.log(error.status);
-    res.status(error.status).send(error);
+    res.status(error.status || STATUS.INTERNAL_SERVER_ERROR).send(error);
   }
 };
 

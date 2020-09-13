@@ -3,7 +3,7 @@ const Joi = require('joi');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const { winston, resObj } = require('../utils');
+const { logger, resObj } = require('../utils');
 const STATUS = require('../constants/statusCodes.constant');
 
 const userSchema = mongoose.Schema({
@@ -48,6 +48,8 @@ const userSchema = mongoose.Schema({
   },
 });
 
+const User = mongoose.model('User', userSchema);
+
 // Hash the password before saving the user model
 userSchema.pre('save', function (next) {
   try {
@@ -58,7 +60,7 @@ userSchema.pre('save', function (next) {
     }
     next();
   } catch (error) {
-    winston.error('error in Password hasing: ', error);
+    logger.error('error in Password hasing: ', error);
     throw resObj.error('Error in Password hasing', error.message);
   }
 });
@@ -66,18 +68,18 @@ userSchema.pre('save', function (next) {
 // post save error validation
 userSchema.post('save', function (error, doc, next) {
   if (error) {
-    winston.error('error in saving data: ', error);
+    logger.error('error in saving data: ', error);
     switch (error.name) {
       case 'MongoError':
         if (error.code === 11000) {
-          throw resObj.error('duplicate entry', error.message, { status: STATUS.BAD_REQUEST });
+          throw resObj.error('duplicate entry', error.message, { status: STATUS.CONFILCT });
         }
         throw resObj.error(error.type || error.name, error.message, { status: STATUS.BAD_REQUEST });
       case 'ValidationError': {
         const errorsKeys = Object.keys(error.errors) || [];
         const errorReasons = errorsKeys.map((key) => error.errors[key].reason);
         throw resObj.error(error.type || error.name, error.message, {
-          status: STATUS.BAD_REQUEST,
+          status: STATUS.UNPROCESSABLE_ENTITY,
           reasons: errorReasons,
         });
       }
@@ -96,7 +98,7 @@ userSchema.methods.generateAuthToken = async function () {
     await user.save();
     return token;
   } catch (error) {
-    winston.error('error in genrating token: ', error);
+    logger.error('error in genrating token: ', error);
     throw resObj.error(error.type || error.name, error.message);
   }
 };
@@ -114,11 +116,9 @@ userSchema.statics.findByCredentials = async (email, password) => {
     }
     return user;
   } catch (error) {
-    winston.error('error in validating user: ', error);
+    logger.error('error in validating user: ', error);
     throw resObj.error(error.type, error.message);
   }
 };
-
-const User = mongoose.model('User', userSchema);
 
 module.exports = User;

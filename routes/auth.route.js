@@ -17,7 +17,7 @@ const authRouter = express.Router();
  *    tags:
  *      - auth
  */
-authRouter.post('/login', joiMiddleware, signIn);
+authRouter.post('/login', joiMiddleware(authSchema.signIn), signIn);
 
 /**
  * @swagger

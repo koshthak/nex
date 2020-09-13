@@ -1,30 +1,27 @@
 const path = require('path');
 const winston = require('winston');
 
-const print = winston.format.printf((info) => {
-  const log = `${info.level}: ${info.message}`;
+const logFormat = (data) => `${data.timestamp} - ${data.level}: ${data.message}`;
 
-  return info.stack ? `${log}\n${info.stack}` : log;
-});
+const errorFormat = winston.format.printf((err) => `${logFormat(err)}\n${err.stack}`);
+
+const customFormat = winston.format.printf((info) => logFormat(info));
 
 // define the custom settings for each transport (file, console, error)
 const options = {
   file: {
-    level: 'info',
     filename: path.join(__dirname, './../logs/app.log'),
-    handleExceptions: true,
     maxsize: 5242880, // 5MB
     maxFiles: 5,
-    format: winston.format.combine(winston.format.json(), print),
+    format: winston.format.combine(winston.format.timestamp(), winston.format.json(), customFormat),
   },
   error: {
     level: 'error',
-    name: 'file.error',
     filename: path.join(__dirname, './../logs/error.log'),
     handleExceptions: true,
     maxsize: 5242880, // 5MB
     maxFiles: 100,
-    format: winston.format.combine(winston.format.json(), print),
+    format: winston.format.combine(winston.format.timestamp(), winston.format.json(), errorFormat),
   },
   console: {
     format: winston.format.combine(winston.format.colorize(), winston.format.simple()),
@@ -33,13 +30,13 @@ const options = {
 
 // instantiate a new Winston Logger with the settings defined above
 const logger = winston.createLogger({
-  transports: [new winston.transports.File(options.error), new winston.transports.File(options.file)],
+  transports: [new winston.transports.File(options.file), new winston.transports.File(options.error)],
   exitOnError: false, // do not exit on handled exceptions
 });
 
-// If we're not in production then log to the `console` with the format:
+// If we're not in production/staging then log to the `console` with the format:
 // `${info.level}: ${info.message} JSON.stringify({ ...rest }) `
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV !== 'production' || process.env.NODE_ENV !== 'dev') {
   logger.add(new winston.transports.Console(options.console));
 }
 

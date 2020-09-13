@@ -7,17 +7,15 @@ const helmet = require('helmet');
 const mongoose = require('mongoose');
 const Ddos = require('ddos');
 const morgan = require('morgan');
-const path = require('path');
 const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 
 // loading env variables
-const envTYpe = process.env.NODE_ENV === 'production' ? '' : '.' + process.env.NODE_ENV;
-require('dotenv').config({ path: path.join(__dirname, './.env' + envTYpe) });
+require('./loadEnv');
 
 // IMP: local file imaport after loading env varible
 const routes = require('./routes');
-const { winston } = require('./utils');
+const { logger } = require('./utils');
 const { corsConfig, ddosConfig, dbConfig, swaggerConfig } = require('./config');
 
 const app = express();
@@ -43,14 +41,14 @@ app.use(cors(corsConfig));
 mongoose
   .connect(dbConfig.url, dbConfig.options)
   .then(() => {
-    winston.info('Successfully connected to the database');
+    logger.info('Successfully connected to the database');
   })
   .catch((err) => {
-    winston.error('Could not connect to the database. Exiting now...', err);
+    logger.error('Could not connect to the database. Exiting now...', err);
   });
 
 // morgan, winston logger
-app.use(morgan('combined', { stream: winston.stream }));
+app.use(morgan('combined', { stream: logger.stream }));
 
 // Route Prefixes
 app.use('/api', routes);
@@ -66,11 +64,18 @@ app.all('*', function (req, res) {
   res.status(404).json({ message: 'API not found' });
 });
 
-// listen for requests
-app
-  .listen(process.env.PORT || 3000, () => {
-    winston.info(`Server is listening on port ${process.env.PORT || 3000}`);
-  })
-  .on('error', (err) => {
-    winston.error('error in starting the server ', err);
-  });
+const startServer = () => {
+  // listen for requests
+  app
+    .listen(process.env.PORT || 3000, () => {
+      const log = `Server is listening on port ${process.env.PORT || 3000}`;
+      console.log(log);
+      logger.info(log);
+    })
+    .on('error', (err) => {
+      console.log(err);
+      logger.error('error in starting the server ', err);
+    });
+};
+
+module.exports = { startServer };

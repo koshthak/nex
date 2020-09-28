@@ -48,8 +48,6 @@ const userSchema = mongoose.Schema({
   },
 });
 
-const User = mongoose.model('User', userSchema);
-
 // Hash the password before saving the user model
 userSchema.pre('save', function (next) {
   try {
@@ -72,7 +70,7 @@ userSchema.post('save', function (error, doc, next) {
     switch (error.name) {
       case 'MongoError':
         if (error.code === 11000) {
-          throw resObj.error('duplicate entry', error.message, { status: STATUS.CONFILCT });
+          throw resObj.error('duplicate entry', 'user already exists', { status: STATUS.CONFILCT });
         }
         throw resObj.error(error.type || error.name, error.message, { status: STATUS.BAD_REQUEST });
       case 'ValidationError': {
@@ -120,5 +118,7 @@ userSchema.statics.findByCredentials = async (email, password) => {
     throw resObj.error(error.type, error.message);
   }
 };
+
+const User = mongoose.model('User', userSchema);
 
 module.exports = User;

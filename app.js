@@ -69,11 +69,9 @@ const startServer = () => {
   app
     .listen(process.env.PORT || 3000, () => {
       const log = `Server is listening on port ${process.env.PORT || 3000}`;
-      console.log(log);
       logger.info(log);
     })
     .on('error', (err) => {
-      console.log(err);
       logger.error('error in starting the server ', err);
     });
 };

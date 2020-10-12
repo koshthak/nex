@@ -24,7 +24,11 @@ const options = {
     format: winston.format.combine(winston.format.timestamp(), winston.format.json(), errorFormat),
   },
   console: {
-    format: winston.format.combine(winston.format.colorize(), winston.format.simple()),
+    format: winston.format.combine(
+      winston.format.colorize(),
+      winston.format.simple(),
+      winston.format.printf((log) => `${log.level}: ${log.message}${log.stack ? '\n' + log.stack : ''}`)
+    ),
   },
 };
 
